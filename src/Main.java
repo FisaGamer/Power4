@@ -123,19 +123,21 @@ public class Main {
         }
     }
     private static void clearConsole() {
-        //This method tries to clear the console after every move
-        /*try {
-            final String os = System.getProperty("os.name");
-            if (os.contains("Windows")) {
-                String[] command = {"cls"};
-                Process proc = new ProcessBuilder(command).start();
-            } else {
-                String[] command = {"clear"};
-                Process proc = new ProcessBuilder(command).start();
-            }
-        } catch (final Exception e) {
-            System.out.println("Impossible to clear");
-        }*/
+        /*
+        This method tries to clear the console after every move
+        try {
+             final String os = System.getProperty("os.name");
+             if (os.contains("Windows")) {
+                 String[] command = {"cls"};
+                 Process proc = new ProcessBuilder(command).start();
+             } else {
+                 String[] command = {"clear"};
+                 Process proc = new ProcessBuilder(command).start();
+             }
+         } catch (final Exception e) {
+             System.out.println("Impossible to clear");
+         }
+        */
         System.out.println("\033[H\033[2J");
         System.out.flush();
     }
