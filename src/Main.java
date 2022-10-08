@@ -81,7 +81,7 @@ public class Main {
         }
         return "  ";
     }
-    private static int switch_player(int player) {
+    public static int switch_player(int player) {
         //This method switches players after each turn
         if (player == YELLOW) {
             return RED;
@@ -156,9 +156,9 @@ public class Main {
         int y = last_case[0];
         int x = last_case[1];
         int counter = 0;
-        return_time:
         for (int i = 0; i < 4; ++i) {
             if ((x < 0 || y < 0 || y > matrix.length-1) || (x > matrix[0].length-1)) {
+                break;
             }
             if (matrix[y][x] == player) {
                 ++counter;
