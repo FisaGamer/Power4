@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Scanner;
+import javax.swing.*;
 
 public class Main {
     private final static int VIDE = 0;
@@ -7,37 +8,44 @@ public class Main {
     private final static int RED = 2;
 
     public static void main(String[] args) {
-        int[][] matrix = new int[6][7];
+        int n_lines = 6;
+        int n_col = 7;
+        int[][] matrix = new int[n_lines][n_col];
         Scanner input = new Scanner(System.in);
         initializer(matrix);
         int player = YELLOW;
         /* matrix[y en partant du haut][x en partant de la gauche] */
         do {
-            System.out.println(which_player(player) + " In which column would you like to play?");
+            clearConsole();
             show(matrix);
-            int colonne = input.nextInt();
-            if (play(matrix, colonne, player)) {
-                if (isItOver(matrix, last_move(matrix, colonne-1))) {
-                    //Player change(player);
-                    System.out.println("Game over, Congratulations to " + which_player(player));
+            System.out.println("\n" + which_player(player) + " In which column would you like to play?");
+            int column;
+            try {
+                column = input.nextInt();
+            } catch (Exception e) {
+                input.next();
+                continue;
+            }
+            if (play(matrix, column, player)) {
+                if (isItOver(matrix, last_move(matrix, column - 1))) {
+                    clearConsole();
                     show(matrix);
+                    System.out.println("\nGAME OVER, CONGRATULATIONS TO " + which_player(player));
+                    JOptionPane.showMessageDialog(null, "GAME OVER, CONGRATULATIONS TO " + which_player(player));
                     break;
                 }
                 player = switch_player(player);
-            } else {
-                System.out.println("This column is full, please play again !");
             }
         } while (true);
     }
 
     private static int[] last_move(int[][] matrix, int column) {
         int[] last_move = new int[2];
-        return_time:
         for (int ligne = 0; ligne < matrix.length; ligne++) {
             if (matrix[ligne][column] != VIDE) {
                 last_move[0] = ligne;
                 last_move[1] = column;
-                break return_time;
+                break;
             }
         }
         return last_move;
@@ -73,7 +81,7 @@ public class Main {
         }
         return "  ";
     }
-    public static int switch_player(int player) {
+    private static int switch_player(int player) {
         //This method switches players after each turn
         if (player == YELLOW) {
             return RED;
@@ -95,18 +103,17 @@ public class Main {
     private static void print(int a) {
         //This function allows to print the grid in a more readable way
         if (a == 0) {
-            System.out.print("  | ");
+            System.out.print("  |");
         } else if (a == 1) {
-            System.out.print(which_player(YELLOW) + "| ");
+            System.out.print(which_player(YELLOW) + "|");
         } else if (a == 2) {
-            System.out.print(which_player(RED) + "| ");
+            System.out.print(which_player(RED) + "|");
         }
     }
 
     private static void show(int[][] matrix) {
-        clearConsole();
         for (int[] line : matrix) {
-            System.out.print("| ");
+            System.out.print("|");
             //System.out.println(" |");
             for (int emplacement : line) {
                 print(emplacement);
@@ -117,7 +124,7 @@ public class Main {
     }
     private static void clearConsole() {
         //This method tries to clear the console after every move
-        try {
+        /*try {
             final String os = System.getProperty("os.name");
             if (os.contains("Windows")) {
                 String[] command = {"cls"};
@@ -128,12 +135,13 @@ public class Main {
             }
         } catch (final Exception e) {
             System.out.println("Impossible to clear");
-        }
+        }*/
+        System.out.println("\033[H\033[2J");
+        System.out.flush();
     }
 
     private static boolean isItOver(int[][] matrix, int[] last_case) {
         //This function checks if the last move made by a player is a winning move by checking in all direction from the last move if there are 4 pawns aligned
-        int player = matrix[last_case[0]][last_case[1]];
         int[][] possibleDirections = {{-1,-1},{-1,0},{-1,1},{0,-1},{0,1},{1,-1},{1,0},{1,1}};
         for (int[] direction : possibleDirections) {
             if (checkInDirection(matrix, direction, last_case)) {
@@ -151,7 +159,6 @@ public class Main {
         return_time:
         for (int i = 0; i < 4; ++i) {
             if ((x < 0 || y < 0 || y > matrix.length-1) || (x > matrix[0].length-1)) {
-                break return_time;
             }
             if (matrix[y][x] == player) {
                 ++counter;

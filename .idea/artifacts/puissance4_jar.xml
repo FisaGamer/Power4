@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="puissance4:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/puissance4_jar</output-path>
+    <root id="archive" name="puissance4.jar">
+      <element id="module-output" name="puissance4" />
+    </root>
+  </artifact>
+</component>
