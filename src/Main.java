@@ -3,7 +3,7 @@ import java.util.Scanner;
 import javax.swing.*;
 
 public class Main {
-    private final static int VIDE = 0;
+    private final static int EMPTY = 0;
     private final static int YELLOW = 1;
     private final static int RED = 2;
 
@@ -33,6 +33,12 @@ public class Main {
                     System.out.println("\nGAME OVER, CONGRATULATIONS TO " + which_player(player));
                     JOptionPane.showMessageDialog(null, "GAME OVER, CONGRATULATIONS TO " + which_player(player));
                     break;
+                } else if (drawCheck(matrix)) {
+                    clearConsole();
+                    show(matrix);
+                    System.out.println("\nGAME OVER, IT'S A DRAW");
+                    JOptionPane.showMessageDialog(null, "GAME OVER, IT'S A DRAW");
+                    break;
                 }
                 player = switch_player(player);
             }
@@ -42,7 +48,7 @@ public class Main {
     private static int[] last_move(int[][] matrix, int column) {
         int[] last_move = new int[2];
         for (int ligne = 0; ligne < matrix.length; ligne++) {
-            if (matrix[ligne][column] != VIDE) {
+            if (matrix[ligne][column] != EMPTY) {
                 last_move[0] = ligne;
                 last_move[1] = column;
                 break;
@@ -54,7 +60,7 @@ public class Main {
     private static void initializer(int[][] matrix) {
         //This function initialize the grid
         for (int[] ints : matrix) {
-            Arrays.fill(ints, VIDE);
+            Arrays.fill(ints, EMPTY);
         }
     }
     private static boolean play(int[][] matrix, int column, int player) {
@@ -63,7 +69,7 @@ public class Main {
             return false;
         }
         for (int i = matrix.length - 1; i >= 0; --i) {
-            if (matrix[i][column - 1] == VIDE) {
+            if (matrix[i][column - 1] == EMPTY) {
                 matrix[i][column - 1] = player;
                 return true;
             }
@@ -144,7 +150,7 @@ public class Main {
 
     private static boolean isItOver(int[][] matrix, int[] last_case) {
         //This function checks if the last move made by a player is a winning move by checking in all direction from the last move if there are 4 pawns aligned
-        int[][] possibleDirections = {{-1,-1},{-1,0},{-1,1},{0,-1},{0,1},{1,-1},{1,0},{1,1}};
+        int[][] possibleDirections = {{1, 0}, {0, 1}, {1, 1}, {1, -1}};
         for (int[] direction : possibleDirections) {
             if (checkInDirection(matrix, direction, last_case)) {
                 return true;
@@ -155,19 +161,31 @@ public class Main {
     private static boolean checkInDirection(int[][] matrix, int[] direction, int[] last_case) {
         //This function checks if there are 4 pawns of the same color from a given case and a given direction
         int player = matrix[last_case[0]][last_case[1]];
-        int y = last_case[0];
-        int x = last_case[1];
+        int y;
+        int x;
         int counter = 0;
-        for (int i = 0; i < 4; ++i) {
-            if ((x < 0 || y < 0 || y > matrix.length-1) || (x > matrix[0].length-1)) {
+        for (int i = -3; i <= 3; ++i) {
+            y = last_case[0] + i*direction[1];
+            x = last_case[1] + i*direction[0];
+            if ((y < 0 || x < 0 || y > matrix.length-1) || (x > matrix[0].length-1)) {
+                continue;
+            } else if (matrix[y][x] == player) {
+                ++counter;
+            } else { //if (matrix[y][x] != player) {
                 break;
             }
-            if (matrix[y][x] == player) {
-                ++counter;
-                y += direction[0];
-                x += direction[1];
+        }
+        return counter >= 4;
+    }
+    private static boolean drawCheck(int[][] matrix) {
+        //This function checks if the grid is full and if it is, it returns true
+        for (int[] line : matrix) {
+            for (int column : line) {
+                if (column == EMPTY) {
+                    return false;
+                }
             }
         }
-        return counter == 4;
+        return true;
     }
 }
