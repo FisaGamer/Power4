@@ -153,12 +153,12 @@ public class Main {
     private static boolean checkInDirection(int[][] matrix, int[] direction, int[] last_case) {
         //This function checks if there are 4 pawns of the same color from a given case and a given direction
         int player = matrix[last_case[0]][last_case[1]];
-        int y;
         int x;
+        int y;
         int counter = 0;
         for (int i = -3; i <= 3; ++i) {
-            y = last_case[0] + i*direction[1];
-            x = last_case[1] + i*direction[0];
+            x = last_case[1] + i*direction[1];
+            y = last_case[0] + i*direction[0];
             if ((y < 0 || x < 0 || y > matrix.length-1) || (x > matrix[0].length-1)) {
                 continue;
             } else if (matrix[y][x] == player) {
